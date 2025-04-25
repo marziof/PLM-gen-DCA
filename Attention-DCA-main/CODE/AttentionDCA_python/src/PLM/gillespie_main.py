@@ -16,12 +16,15 @@ from plm_seq_utils import nums_to_letters, modify_seq, letters_to_nums, set_seed
 
 def gennerate_gill(J,N_seqs=40000, init_sequence=None, beta=1):
     gen_sequences = []
+    time_seq=[]
     seq = SequenceGill(J, init_sequence, beta=1)
     for _ in tqdm(range(N_seqs)):
         seq.draw_aa()
         gen_sequences.append(seq.sequence.copy())
+        time_seq.append(seq.time)
     gen_sequences = np.array(gen_sequences)
-    return gen_sequences
+    time_seq = np.array(time_seq)
+    return gen_sequences, time_seq
 
 def generate_gill_n_save(save_dir, save_name, J, N_seqs=10000, init_sequence=None):
     """
@@ -30,7 +33,7 @@ def generate_gill_n_save(save_dir, save_name, J, N_seqs=10000, init_sequence=Non
     - A `.npy` file containing the generated sequences in numerical format.
     - A `.txt` file containing the generated sequences in letter format.
     """
-    gen_sequences = gennerate_gill(J, N_seqs, init_sequence)
+    gen_sequences, time_seq = gennerate_gill(J, N_seqs, init_sequence)
     gen_sequences_letters = [nums_to_letters(sequence) for sequence in gen_sequences]
     
     print(f"Generated sequences (letters): {gen_sequences_letters[:5]}")  # Show first 5 sequences
@@ -43,7 +46,7 @@ def generate_gill_n_save(save_dir, save_name, J, N_seqs=10000, init_sequence=Non
     
     # Save the sequences in numerical format as a .npy file
     np.save(f"{save_dir}/{save_name}.npy", gen_sequences)
-    
+    np.save(f"{save_dir}/{save_name}_time_seq.npy", time_seq)
     # Save the sequences in letter format as a .txt file (each sequence on a new line)
     with open(f"{save_dir}/{save_name}.txt", "w") as f:
         for sequence in gen_sequences_letters:
