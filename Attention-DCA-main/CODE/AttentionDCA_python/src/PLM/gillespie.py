@@ -5,13 +5,14 @@ from plm_seq_utils import letter_to_num
 
 class SequenceGill:
     # Logic: proba to assing a specific AA to a specific site = proba to choose site (uniform distrib) * proba to draw AA at site
-    def __init__(self, J, initial_sequence = None, beta = 1):
+    def __init__(self, J, initial_sequence = None, beta = 1,time=0):
         """
         Initialize the SequenceGill object with a coupling tensor J of the family and an optional initial sequence.
         """
         self.J = J
         self.L = J.shape[-1]
         self.beta = beta
+        self.time=0
         if initial_sequence is None:
             self.sequence = np.random.choice(np.arange(21), self.L) # Sequence of ints (1 to 21)
         else:
@@ -45,22 +46,40 @@ class SequenceGill:
     
     def plm_site_distribution(self, site):
         """
-        Compute probability distriution for specific site (normalized)
+        Compute probability distriution for specific site 
         """
         probs = []
         for trial_aa in range(21):
-            probs.append(self.plm_calc(site, trial_aa))
+            if trial_aa==self.sequence[site]:
+                probs.append(0)
+            else:
+                probs.append(self.plm_calc(site, trial_aa))
         probs = np.array(probs)
-        probs /= probs.sum()
         return probs
     
-    def draw_aa(self, site):
+    def gillespie_seq(self):
+        """
+        return matrix of probabilities of shape (L,21)
+        """
+        probs=[]
+        for site in range(self.L):
+            probs.append(self.plm_site_distribution(site))
+        probs= np.array(probs)
+        return probs
+    
+    def draw_aa(self):
         """
         Sample a new AA at the given site from PLM distribution
         """
-        probs = self.plm_site_distribution(site)
-        new_aa = np.random.choice(21, p=probs) # aa from 0 to 20
+        probs = self.gillespie_seq()
+        k_hat=probs.sum()
+        probs=probs/k_hat
+        flat_probs=probs.ravel()
+        rows ,cols = probs.shape
+        sampled_index = np.random.choice(flat_probs.size, p=flat_probs)
+        site, new_aa = np.unravel_index(sampled_index, (rows, cols))
         self.sequence[site] = new_aa
+        self.time=np.random.exponential(1/k_hat)
 
     def seq_energy(self):
         sum=0
