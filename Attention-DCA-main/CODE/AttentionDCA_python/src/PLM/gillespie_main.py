@@ -97,21 +97,21 @@ print(N)
 
 ##############################################################
 """
-    Generate sequences with PLM random initialization
+    Generate sequences with gillespie random initialization
 """
 save_dir = "gill_generated_sequences"
-N_seqs = 40000
-save_name = "gill_generated_sequences_randinit_40000"
-generate_gill_n_save(save_dir, save_name, Jtens, N_seqs=40000, init_sequence=None)
+N_seqs = 1000
+save_name = f"gill_generated_sequences_randinit_{N_seqs}"
+generate_gill_n_save(save_dir, save_name, Jtens, N_seqs, init_sequence=None)
 
 ##############################################################
 """
-    Generate sequences with PLM initialization from a sequence
+    Generate sequences with gillespie initialization from a sequence
 """
 init_sequence = 'DYYQVLGVPKDADAKSIKKAFRKLARKYHPDVNPGDKEAERKFKEANEANEVLSDPEKRKKYD'
 init_sequence_num = letters_to_nums(init_sequence)
 ratio = 0.1
 init_sequence_num = modify_seq(init_sequence_num, ratio)
-N_seqs=40000
+N_seqs=5000
 save_name = f"gill_gen_seqs_w_init_seq_Ns{N_seqs}_r{ratio}"
 #generate_plm_n_save(save_dir, save_name, Jtens, N_seqs, init_sequence=init_sequence_num)
