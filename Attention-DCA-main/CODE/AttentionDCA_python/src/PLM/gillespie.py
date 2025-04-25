@@ -1,16 +1,21 @@
 from tqdm import tqdm
 import numpy as np
 
-from plm_seq_reader import letter_to_num
+from plm_seq_utils import letter_to_num
 
-class SequencePLM:
-    def __init__(self, J, sequence = None):
+class SequenceGill:
+    # Logic: proba to assing a specific AA to a specific site = proba to choose site (uniform distrib) * proba to draw AA at site
+    def __init__(self, J, initial_sequence = None, beta = 1):
+        """
+        Initialize the SequenceGill object with a coupling tensor J of the family and an optional initial sequence.
+        """
         self.J = J
         self.L = J.shape[-1]
-        if sequence is None:
-            self.sequence = np.random.choice(np.arange(1, 22), self.L) # Sequence of ints (1 to 21)
+        self.beta = beta
+        if initial_sequence is None:
+            self.sequence = np.random.choice(np.arange(21), self.L) # Sequence of ints (1 to 21)
         else:
-            self.sequence = sequence
+            self.sequence = initial_sequence
 
     def to_letter(self):
         """
@@ -25,7 +30,6 @@ class SequencePLM:
     def plm_calc(self, site, trial_aa):
         """
         Compute unnormalized pseudo-likelihood of trial_aa at a given site.
-        
         site: int from 0 to L-1
         trial_aa: int from 0 to 21 (amino acid index)
         """
@@ -34,8 +38,9 @@ class SequencePLM:
             if j == site:
                 continue
             aa_j = self.sequence[j]
-            sum_energy += self.J[trial_aa-1, aa_j-1, site, j] # check indexing
-        prob = np.exp(sum_energy)  # unnormalized
+            sum_energy += self.J[trial_aa, aa_j, site, j] # check indexing
+            #sum_energy += self.J[aa_j, trial_aa, j, site]
+        prob = np.exp(self.beta * sum_energy)  # unnormalized
         return prob
     
     def plm_site_distribution(self, site):
@@ -54,19 +59,12 @@ class SequencePLM:
         Sample a new AA at the given site from PLM distribution
         """
         probs = self.plm_site_distribution(site)
-        new_aa = np.random.choice(22, p=probs)
+        new_aa = np.random.choice(21, p=probs) # aa from 0 to 20
         self.sequence[site] = new_aa
 
-
-def generate_plm(J,maxiter=10000):
-    """
-    function to generate new sequence using PLM
-    """
-    gen_sequences = []
-    seq = SequencePLM(J)
-    for _ in tqdm(range(maxiter)):
-        site = np.random.randint(seq.L)  # Random site from 0 to L-1
-        seq.draw_aa(site)
-        gen_sequences.append(seq.sequence.copy())
-    gen_sequences = np.array(gen_sequences)
-    return gen_sequences
+    def seq_energy(self):
+        sum=0
+        for i in range(self.L):
+            for j in range(self.L):
+                sum+=self.J[self.sequence[i], self.sequence[j],i,j]
+        return sum
