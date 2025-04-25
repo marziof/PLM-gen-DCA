@@ -8,7 +8,6 @@ import os
 
 #################################################################
 # FUNCTIONS
-
 def hamming_dist(seq1, seq2):
     """
     Calculate the Hamming distance between two sequences.
