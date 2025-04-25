@@ -38,7 +38,7 @@ class SequencePLM:
                 continue
             aa_j = self.sequence[j]
             sum_energy += self.J[trial_aa, aa_j, site, j] # check indexing
-            #sum_energy += self.J[aa_j, trial_aa, j, site]
+            #sum_energy += self.J[aa_j, trial_aa, j, site] 
         prob = np.exp(self.beta * sum_energy)  # unnormalized
         return prob
     

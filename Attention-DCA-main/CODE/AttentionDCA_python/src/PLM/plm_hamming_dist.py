@@ -45,7 +45,8 @@ def vectorized_hamming_distance(sequences1, sequences2):
 
 # --- Load sequences ---
 # Define the file path
-filename = 'generated_sequences_40000'
+#filename = 'generated_sequences_40000'
+filename = 'generated_sequence_randinit_40000'
 cwd = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main'
 output_file = cwd + f'/CODE/AttentionDCA_python/src/PLM/generated_sequences/{filename}.npy'
 family = 'jdoms_bacteria_train2'
