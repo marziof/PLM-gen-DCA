@@ -27,16 +27,25 @@ N = 174
 n_epochs = 500
 loss_type = 'without_J'
 family = 'jdoms' #'jdoms_bacteria_train2'
-cwd = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main/CODE/AttentionDCA_python/src'
-Q_1 = read_tensor_from_txt( cwd +"/results/{H}_{d}_{family}_{losstype}_{n_epochs}_youss/Q_tensor.txt".format(H=H, d=d, family=family, losstype=loss_type, n_epochs=n_epochs))
-K_1 = read_tensor_from_txt( cwd +"/results/{H}_{d}_{family}_{losstype}_{n_epochs}_youss/K_tensor.txt".format(H=H, d=d, family=family, losstype=loss_type, n_epochs=n_epochs))
-V_1 = read_tensor_from_txt( cwd +"/results/{H}_{d}_{family}_{losstype}_{n_epochs}_youss/V_tensor.txt".format(H=H, d=d, family=family, losstype=loss_type, n_epochs=n_epochs))
+#cwd = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main/CODE/AttentionDCA_python/src'
+cwd='C:\Users\youss\OneDrive\Bureau\master epfl\MA2\TP4 De los Rios\git_test\PLM-gen-DCA\Attention-DCA-main\CODE\AttentionDCA_python\src'
+
+# Q_1 = read_tensor_from_txt( cwd +"/results/{H}_{d}_{family}_{losstype}_{n_epochs}_youss/Q_tensor.txt".format(H=H, d=d, family=family, losstype=loss_type, n_epochs=n_epochs))
+# K_1 = read_tensor_from_txt( cwd +"/results/{H}_{d}_{family}_{losstype}_{n_epochs}_youss/K_tensor.txt".format(H=H, d=d, family=family, losstype=loss_type, n_epochs=n_epochs))
+# V_1 = read_tensor_from_txt( cwd +"/results/{H}_{d}_{family}_{losstype}_{n_epochs}_youss/V_tensor.txt".format(H=H, d=d, family=family, losstype=loss_type, n_epochs=n_epochs))
+Q_1 = read_tensor_from_txt( cwd +r'\results\{H}_{d}_{family}_{losstype}_{n_epochs}_youss\Q_tensor.txt'.format(H=H, d=d, family=family, losstype=loss_type, n_epochs=n_epochs))
+K_1 = read_tensor_from_txt( cwd +r'\results\{H}_{d}_{family}_{losstype}_{n_epochs}_youss\K_tensor.txt'.format(H=H, d=d, family=family, losstype=loss_type, n_epochs=n_epochs))
+V_1 = read_tensor_from_txt( cwd +r'\results\{H}_{d}_{family}_{losstype}_{n_epochs}_youss\V_tensor.txt'.format(H=H, d=d, family=family, losstype=loss_type, n_epochs=n_epochs))
+
 H,d,N=Q_1.shape
 q=V_1.shape[1]
 
 ###
 filename = cwd + f'/CODE/DataAttentionDCA/jdoms/{family}.fasta'
 structfile = cwd + '/CODE/DataAttentionDCA/jdoms/jdom.dat'
+filename = cwd + f'\CODE\DataAttentionDCA\jdoms\{family}.fasta'
+structfile = cwd + '\CODE\DataAttentionDCA\jdoms\jdom.dat'
+
 file_path = filename
 
 def read_fasta(file_path):
@@ -68,6 +77,8 @@ N = Jtens.shape[2]
 #TESTS
 cwd = os.getcwd()
 save_path = cwd + '/results/Proba_plots'
+save_path = cwd + r'\results\Proba_plots'
+
 if not os.path.exists(save_path):
     os.makedirs(save_path)
 
@@ -127,8 +138,10 @@ plt.show()
     Test 2: start from true sequence
 """
 
-att_main = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main'
-fasta_path = att_main + '/CODE/DataAttentionDCA/jdoms/jdoms_bacteria_train2.fasta'
+#att_main = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main'
+att_main='C:\Users\youss\OneDrive\Bureau\master epfl\MA2\TP4 De los Rios\git_test\PLM-gen-DCA\Attention-DCA-main'
+#fasta_path = att_main + '/CODE/DataAttentionDCA/jdoms/jdoms_bacteria_train2.fasta'
+fasta_path = att_main + '\CODE\DataAttentionDCA\jdoms\jdoms_bacteria_train2.fasta'
 true_seq = sequences_from_fasta(fasta_path)[0]  # Read the first sequence from the FASTA file
 print("True sequence:", true_seq)
 # Convert sequence to numerical representation
