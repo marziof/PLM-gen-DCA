@@ -37,7 +37,7 @@ class SequenceGill:
         site: int from 0 to L-1
         trial_aa: int from 0 to 21 (amino acid index)
         """
-        if quick:
+        if not quick:
             sum_energy = 0.0
             for j in range(self.L):
                 if j == site:
@@ -46,7 +46,7 @@ class SequenceGill:
                 sum_energy += self.J[trial_aa, aa_j, site, j] # check indexing
                 #sum_energy += self.J[aa_j, trial_aa, j, site]
         else:
-            sum_energy=self.mat_energy[site] +self.J[trial_aa, self.sequence[self.changed_site],site,self.changed_site]- self.J[trial_aa, self.old_aa,site,self.changed_site]
+            sum_energy=self.mat_energy[site][trial_aa] +self.J[trial_aa, self.sequence[self.changed_site],site,self.changed_site]- self.J[trial_aa, self.old_aa,site,self.changed_site]
         prob = np.exp(self.beta * sum_energy)  # unnormalized
         return prob
     
@@ -56,20 +56,20 @@ class SequenceGill:
         """
         probs = []
         for trial_aa in range(21):
-            if trial_aa==self.sequence[site]:
-                probs.append(0)
-            else:
-                probs.append(self.plm_calc(site, trial_aa, quick=False))
+            # if trial_aa==self.sequence[site]:
+            #     probs.append(0)
+            # else:
+            probs.append(self.plm_calc(site, trial_aa, quick=quick))
         probs = np.array(probs)
         return probs
     
-    def gillespie_seq(self):
+    def gillespie_seq(self,quick=False):
         """
         return matrix of probabilities of shape (L,21)
         """
         probs=[]
         for site in range(self.L):
-            probs.append(self.plm_site_distribution(site,quick=False))
+            probs.append(self.plm_site_distribution(site,quick=quick))
         probs= np.array(probs)
         return probs
     
@@ -77,11 +77,13 @@ class SequenceGill:
         """
         Sample a new AA at the given site from PLM distribution
         """
-        if self.mat_energy==None:
+        if self.mat_energy is None:
             probs = self.gillespie_seq()
             self.mat_energy=1/self.beta*np.log(probs)
         else:
             probs = self.gillespie_seq(quick=True)
+        for site in range(self.L):
+            probs[site,self.sequence[site]]=0
         k_hat=probs.sum()
         probs=probs/k_hat
         flat_probs=probs.ravel()
