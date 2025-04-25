@@ -62,8 +62,8 @@ print(N)
 """
 save_dir = "generated_sequences"
 N_seqs = 40000
-save_name = "generated_sequences_40000"
-#generate_plm_n_save(save_dir, Jtens, N_seqs=40000, init_sequence=None)
+save_name = "generated_sequences_randinit_40000"
+generate_plm_n_save(save_dir, save_name, Jtens, N_seqs=40000, init_sequence=None)
 
 ##############################################################
 """
@@ -75,4 +75,4 @@ ratio = 0.1
 init_sequence_num = modify_seq(init_sequence_num, ratio)
 N_seqs=40000
 save_name = f"gen_seqs_w_init_seq_Ns{N_seqs}_r{ratio}"
-generate_plm_n_save(save_dir, save_name, Jtens, N_seqs, init_sequence=init_sequence_num)
+#generate_plm_n_save(save_dir, save_name, Jtens, N_seqs, init_sequence=init_sequence_num)
