@@ -11,7 +11,6 @@ from dcascore import *
 sys.path.pop(0)  # Removes the parent_dir from sys.path
 import random
 import matplotlib.pyplot as plt
-
 from plm_model import SequencePLM
 from plm_gen_methods import generate_plm
 from plm_seq_utils import letter_to_num, num_to_letter, sequences_from_fasta, letters_to_nums, read_tensor_from_txt, set_seed
