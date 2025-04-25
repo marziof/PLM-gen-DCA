@@ -12,6 +12,9 @@ class SequenceGill:
         self.J = J
         self.L = J.shape[-1]
         self.beta = beta
+        self.mat_energy=None
+        self.old_aa=None
+        self.changed_site=None
         self.time=0
         if initial_sequence is None:
             self.sequence = np.random.choice(np.arange(21), self.L) # Sequence of ints (1 to 21)
@@ -28,23 +31,26 @@ class SequenceGill:
         print(letter_seq)
         return letter_seq
 
-    def plm_calc(self, site, trial_aa):
+    def plm_calc(self, site, trial_aa,quick=False):
         """
         Compute unnormalized pseudo-likelihood of trial_aa at a given site.
         site: int from 0 to L-1
         trial_aa: int from 0 to 21 (amino acid index)
         """
-        sum_energy = 0.0
-        for j in range(self.L):
-            if j == site:
-                continue
-            aa_j = self.sequence[j]
-            sum_energy += self.J[trial_aa, aa_j, site, j] # check indexing
-            #sum_energy += self.J[aa_j, trial_aa, j, site]
+        if quick:
+            sum_energy = 0.0
+            for j in range(self.L):
+                if j == site:
+                    continue
+                aa_j = self.sequence[j]
+                sum_energy += self.J[trial_aa, aa_j, site, j] # check indexing
+                #sum_energy += self.J[aa_j, trial_aa, j, site]
+        else:
+            sum_energy=self.mat_energy[site] +self.J[trial_aa, self.sequence[self.changed_site],site,self.changed_site]- self.J[trial_aa, self.old_aa,site,self.changed_site]
         prob = np.exp(self.beta * sum_energy)  # unnormalized
         return prob
     
-    def plm_site_distribution(self, site):
+    def plm_site_distribution(self, site, quick=False):
         """
         Compute probability distriution for specific site 
         """
@@ -53,7 +59,7 @@ class SequenceGill:
             if trial_aa==self.sequence[site]:
                 probs.append(0)
             else:
-                probs.append(self.plm_calc(site, trial_aa))
+                probs.append(self.plm_calc(site, trial_aa, quick=False))
         probs = np.array(probs)
         return probs
     
@@ -63,7 +69,7 @@ class SequenceGill:
         """
         probs=[]
         for site in range(self.L):
-            probs.append(self.plm_site_distribution(site))
+            probs.append(self.plm_site_distribution(site,quick=False))
         probs= np.array(probs)
         return probs
     
@@ -71,13 +77,19 @@ class SequenceGill:
         """
         Sample a new AA at the given site from PLM distribution
         """
-        probs = self.gillespie_seq()
+        if self.mat_energy==None:
+            probs = self.gillespie_seq()
+            self.mat_energy=1/self.beta*np.log(probs)
+        else:
+            probs = self.gillespie_seq(quick=True)
         k_hat=probs.sum()
         probs=probs/k_hat
         flat_probs=probs.ravel()
         rows ,cols = probs.shape
         sampled_index = np.random.choice(flat_probs.size, p=flat_probs)
         site, new_aa = np.unravel_index(sampled_index, (rows, cols))
+        self.old_aa=self.sequence[site]
+        self.changed_site=site
         self.sequence[site] = new_aa
         self.time=np.random.exponential(1/k_hat)
 
