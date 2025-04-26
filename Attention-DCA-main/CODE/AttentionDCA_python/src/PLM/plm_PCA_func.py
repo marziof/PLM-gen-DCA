@@ -1,0 +1,53 @@
+import numpy as np
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+
+import os
+import sys
+current_dir = os.path.dirname(__file__)
+parent_dir = os.path.abspath(os.path.join(current_dir, '..'))
+sys.path.insert(0, parent_dir)
+from dcascore import *
+# back to original path (in PLM)
+sys.path.pop(0)  # Removes the parent_dir from sys.path
+from plm_seq_utils import letters_to_nums, sequences_from_fasta, one_hot_seq_batch
+
+
+############### PCA function #################################
+def plot_pca_of_sequences(sequences, title="PCA of Sequences", max_pot=21, save_path=None):
+    """
+    Plots PCA of a list of sequences (strings or numerical) after one-hot encoding.
+
+    Parameters:
+    - sequences: list of sequences (strings or integer lists)
+    - title: title of the PCA plot
+    - max_pot: number of possible categories for one-hot encoding (default: 21)
+    - save_path: optional path to save the plot
+    """
+
+    # Convert to numerical if needed
+    if isinstance(sequences[0], str):
+        sequences = [letters_to_nums(seq) for seq in sequences]
+
+    # One-hot encode
+    one_hot_encoded = one_hot_seq_batch(sequences, max_pot=max_pot)
+
+    # Flatten and scale
+    flat = one_hot_encoded.reshape(one_hot_encoded.shape[0], -1)
+    scaled = StandardScaler().fit_transform(flat)
+
+    # PCA
+    pca_result = PCA(n_components=2).fit_transform(scaled)
+
+    # Plot
+    plt.figure(figsize=(7, 6))
+    plt.scatter(pca_result[:, 0], pca_result[:, 1], alpha=0.5, s=10)
+    plt.title(title)
+    plt.xlabel("PC1")
+    plt.ylabel("PC2")
+    plt.grid(True)
+
+    if save_path:
+        plt.savefig(save_path)
+    plt.show()
