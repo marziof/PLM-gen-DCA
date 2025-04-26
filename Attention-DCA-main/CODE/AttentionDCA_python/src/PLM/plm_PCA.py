@@ -55,24 +55,35 @@ def plot_pca_of_sequences(sequences, title="PCA of Sequences", max_pot=21, save_
 """
     One-hot encode AA sequences - plm generated and true
 """
+<<<<<<< HEAD
 filename = 'gen_seqs_w_init_seq_Ns40000_r0.1'
 #filename = 'generated_sequences_randinit_40000'
 #filename = 'generated_sequences_10000'
 #cwd = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main'
 cwd=r'C:\Users\youss\OneDrive\Bureau\master epfl\MA2\TP4 De los Rios\git_test\PLM-gen-DCA\Attention-DCA-main'
+=======
+#filename = 'gen_seqs_w_init_seq_Ns40000_r0.1'
+#simu_name = 'init_seq_Ns40000_r0.1'
+filename = 'generated_sequences_randinit_40000'
+simu_name = 'randinit_40000'
+cwd = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main'
+#cwd='C:\Users\youss\OneDrive\Bureau\master epfl\MA2\TP4 De los Rios\git_test\PLM-gen-DCA\Attention-DCA-main'
+>>>>>>> a957e577e12979d1b67405ab8ebd3950a463b091
 # Load the generated sequences
-#output_file = cwd + f'/CODE/AttentionDCA_python/src/PLM/generated_sequences/{filename}.npy'
+output_file = cwd + f'/CODE/AttentionDCA_python/src/PLM/generated_sequences/{filename}.npy'
 
-output_file = cwd + f'\CODE\AttentionDCA_python\src\PLM\generated_sequences\{filename}.npy'
+#output_file = cwd + f'\CODE\AttentionDCA_python\src\PLM\generated_sequences\{filename}.npy'
 gen_sequences = np.load(output_file)
 saved_seq = gen_sequences.copy()
-gen_sequences = gen_sequences[10000:35000]
+Ni = 10000
+Nf = 30000
+gen_sequences = gen_sequences[Ni:Nf]
 
 # Load train sequences
 family = 'jdoms_bacteria_train2'
-#filename = cwd + f'/CODE/DataAttentionDCA/jdoms/{family}.fasta'
+filename = cwd + f'/CODE/DataAttentionDCA/jdoms/{family}.fasta'
 
-filename = cwd + f'\CODE\DataAttentionDCA\jdoms\{family}.fasta'
+#filename = cwd + f'\CODE\DataAttentionDCA\jdoms\{family}.fasta'
 
 train_sequences = sequences_from_fasta(filename)
 train_sequences_num = [letters_to_nums(seq) for seq in train_sequences]
@@ -116,14 +127,14 @@ plt.figure(figsize=(12, 5))
 # Left plot: PCA of True Sequences
 plt.subplot(1, 2, 1)
 plt.scatter(train_pca[:, 0], train_pca[:, 1], alpha=0.5, s=10)
-plt.title("PCA of True Sequences")
+plt.title("PCA of Train Sequences")
 plt.xlabel("PC1")
 plt.ylabel("PC2")
 plt.grid(True)
 # Right plot: PCA of Generated Sequences
 plt.subplot(1, 2, 2)
 plt.scatter(gen_pca[:, 0], gen_pca[:, 1], alpha=0.5, s=10, color='orange')
-plt.title("PCA of Generated Sequences")
+plt.title("PCA of PLM Generated Sequences")
 plt.xlabel("PC1")
 plt.ylabel("PC2")
 plt.grid(True)
@@ -134,8 +145,7 @@ save_path = os.path.join(cwd, 'CODE', 'AttentionDCA_python', 'src', 'PLM', 'resu
 if not os.path.exists(save_path):
     os.makedirs(save_path)
 # Save PCA plot side-by-side
-plt.savefig(save_path + 'PCA_plots.png')
-print("Saved PCA plots to:", save_path + 'PCA_plots.png')
+plt.savefig(save_path + f'/TrainGen_{simu_name}_{Ni}_{Nf}.png')
 # After saving, display the plot
 plt.show()
 
@@ -144,12 +154,12 @@ plt.figure(figsize=(8, 6))
 # Plot both true and generated sequences on the same graph
 plt.scatter(train_pca[:, 0], train_pca[:, 1], alpha=0.5, s=10, label='True Sequences')
 plt.scatter(gen_pca[:, 0], gen_pca[:, 1], alpha=0.5, s=10, color='orange', label='Generated Sequences')
-plt.title("PCA of True and Generated Sequences")
+plt.title("PCA of train sequences and PLM generated sequences")
 plt.xlabel("PC1")
 plt.ylabel("PC2")
 plt.legend()
 plt.grid(True)
 # Save the combined PCA plot
-plt.savefig(save_path + 'PCA_plots_onefig.png')
+plt.savefig(save_path + f'/TrainGen_{simu_name}_{Ni}_{Nf}_onefig.png')
 # Display the combined PCA plot
 plt.show()
