@@ -56,6 +56,7 @@ def plot_pca_of_sequences(sequences, title="PCA of Sequences", max_pot=21, save_
     One-hot encode AA sequences - plm generated and true
 """
 filename = 'gen_seqs_w_init_seq_Ns40000_r0.1'
+simu_name=filename
 #filename = 'generated_sequences_randinit_40000'
 #filename = 'generated_sequences_10000'
 #cwd = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main'
