@@ -6,8 +6,7 @@ import matplotlib.pyplot as plt
 import os
 
 
-#################################################################
-# FUNCTIONS
+# ------------------------------- FUNCTIONS -------------------------------
 def hamming_dist(seq1, seq2):
     """
     Calculate the Hamming distance between two sequences.
@@ -39,24 +38,26 @@ def vectorized_hamming_distance(sequences1, sequences2):
     # Compare the sequences element-wise to count differences (direct numeric comparison)
     return np.sum(sequences1 != sequences2, axis=1)
 
-#################################################################
-# MAIN
+# ------------------------------- MAIN -------------------------------
+
+cwd = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main'
+#cwd='C:\Users\youss\OneDrive\Bureau\master epfl\MA2\TP4 De los Rios\git_test\PLM-gen-DCA\Attention-DCA-main'
 
 # --- Load sequences ---
-# Define the file path
-#filename = 'generated_sequences_40000'
-filename = 'generated_sequence_randinit_40000'
-cwd = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main'
+filename = 'gen_seqs_w_init_seq_Ns40000_r0.1'
+simu_name = 'init_seq_Ns40000_r0.1'
+filename = 'generated_sequences_randinit_40000'
+simu_name = 'randinit_Ns40000'
 output_file = cwd + f'/CODE/AttentionDCA_python/src/PLM/generated_sequences/{filename}.npy'
+gen_sequences=np.load(output_file)
+
 family = 'jdoms_bacteria_train2'
 filename = cwd + f'/CODE/DataAttentionDCA/jdoms/{family}.fasta'
 
 # Get the raw letter sequences from the FASTA file
 folder_name = "/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main/CODE/AttentionDCA_python/src/my_saved_data"
 os.makedirs(folder_name, exist_ok=True)
-file_path = os.path.join(folder_name, "plm_generated_V21_gap_seqs_jdom_40000_exp_pos_init_mod.txt")
-seq_aa=np.loadtxt(file_path,dtype=int)
-gen_sequences = seq_aa
+
 #gen_sequences = np.load(output_file)
 train_sequences = sequences_from_fasta(filename)
 # Convert to numeric sequences
@@ -73,18 +74,20 @@ print("train sequences: ", np.shape(train_sequences_num))
 print("test sequences: ", np.shape(test_sequences_num))
 print("gen sequences: ", np.shape(gen_sequences))
 
-#################################################################
-# Results
+# ----------------------- RESULTS -----------------------
+# --- Create save directory ---
 cwd = os.getcwd()
 save_path = cwd + '/results/Hamming_distances'
 if not os.path.exists(save_path):
     os.makedirs(save_path)
 
-# --- Select every 1000th sequence ---
+#################################################################
+### 1. Hamming distance between generated sequences and training sequences
+# --- define subsets ---
 # Define the index range
-start_idx = 2000
+start_idx = 1
 end_idx = 40000
-step_size = 100  # Select every 1000th sequence
+step_size = 1  # Select every 1000th sequence
 
 # Select sequences between start and end, with step
 gen_sequences_subset = gen_sequences[start_idx:end_idx:step_size]
@@ -101,7 +104,7 @@ plt.title("Hamming Distances as a Function of Sequence Index")
 plt.xlabel("Sequence Index")
 plt.ylabel("Hamming Distance")
 plt.savefig(save_path + '/Hd_gen_train.pdf')
-print("Saved plot to:", save_path + '/Hd_gen_train.pdf')
+print("Saved plot to:", save_path + f'/Hd_GenTrain_{simu_name}.pdf')
 #plt.show()
 
 # Print out some statistics
@@ -132,7 +135,7 @@ plt.title("Hamming Distances Between Train Sequence Pairs")
 plt.xlabel("Pair Index (first vs last, etc.)")
 plt.ylabel("Hamming Distance")
 plt.savefig(save_path + '/Hd_test_train.pdf')
-print("Saved plot to:", save_path + '/Hd_test_train.pdf')
+print("Saved plot to:", save_path + f'/Hd_test_train_{simu_name}.pdf')
 #plt.show()
 
 # Print stats
@@ -141,7 +144,7 @@ print("Average Hamming distance (within train pairs):", np.mean(distance_within_
 
 
 #################################################################
-# --- Compare Hamming distances within generated sequences - evolution wrt initial sequence ---
+### 2. Compare Hamming distances within generated sequences - evolution wrt initial sequence ---
 
 initial_sequence = gen_sequences[0]  # Example, should be the initial sequence you are working with
 
@@ -160,8 +163,7 @@ plt.plot(np.arange(len(hamming_distances)), hamming_distances, alpha=0.5)
 plt.title("Hamming Distances Between Initial Sequence and Generated Sequences")
 plt.xlabel("Sequence Index")
 plt.ylabel("Hamming Distance")
-plt.savefig(save_path + '/Hd_gen_init.pdf')
-print("Saved plot to:", save_path + '/Hd_gen_init.pdf')
+plt.savefig(save_path + f'/Hd_gen_init_{simu_name}.pdf')
 #plt.show()
 
 # Print some statistics
@@ -195,6 +197,5 @@ plt.xlabel("Correlation Step (sequence offset)")
 plt.ylabel("Correlation")
 plt.grid(True)
 plt.tight_layout()
-plt.savefig(save_path + '/Hd_gen_correlation.pdf')
-print("Saved plot to:", save_path + '/Hd_gen_correlation.pdf')
+plt.savefig(save_path + f'/Hd_correlation_{simu_name}.pdf')
 #plt.show()

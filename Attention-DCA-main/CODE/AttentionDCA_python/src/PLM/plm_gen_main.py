@@ -11,7 +11,7 @@ from dcascore import *
 # back to original path (in PLM)
 sys.path.pop(0)  # Removes the parent_dir from sys.path
 from model import AttentionModel
-from plm_gen_methods import generate_plm_n_save
+from plm_gen_methods import generate_plm_n_save, generate_plm_alter_n_save
 from plm_seq_utils import read_tensor_from_txt, set_seed, letters_to_nums, modify_seq
 
 
@@ -63,7 +63,7 @@ print(N)
 save_dir = "generated_sequences"
 N_seqs = 40000
 save_name = "generated_sequences_randinit_40000"
-generate_plm_n_save(save_dir, save_name, Jtens, N_seqs=40000, init_sequence=None)
+#generate_plm_n_save(save_dir, save_name, Jtens, N_seqs=40000, init_sequence=None)
 
 ##############################################################
 """
@@ -76,3 +76,29 @@ init_sequence_num = modify_seq(init_sequence_num, ratio)
 N_seqs=40000
 save_name = f"gen_seqs_w_init_seq_Ns{N_seqs}_r{ratio}"
 #generate_plm_n_save(save_dir, save_name, Jtens, N_seqs, init_sequence=init_sequence_num)
+
+##############################################################
+"""
+    Generate sequences alternate method with PLM initialization from a sequence
+"""
+
+N_seqs=10000
+N_iters=2000
+save_name = f"gen_seqs_alter_randinit_Ns{N_seqs}_Ni{N_iters}"
+#generate_plm_alter_n_save(save_dir, save_name, Jtens, N_seqs, N_iters, init_sequence=None)
+
+##############################################################
+"""
+    Generate sequences with PLM initialization from a sequence different betas
+"""
+init_sequence = 'DYYQVLGVPKDADAKSIKKAFRKLARKYHPDVNPGDKEAERKFKEANEANEVLSDPEKRKKYD'
+init_sequence_num = letters_to_nums(init_sequence)
+ratio = 0.1
+init_sequence_num = modify_seq(init_sequence_num, ratio)
+
+N_seqs=4000
+betas = [0.01, 0.1, 0.5, 1, 2, 4, 10]
+for b in betas:
+    save_name = f"gen_seqs_w_init_seq_Ns{N_seqs}_r{ratio}_b{b}"
+    generate_plm_n_save(save_dir, save_name, Jtens, N_seqs, init_sequence=init_sequence_num, beta=b)
+    print("beta ", b, "saved")
