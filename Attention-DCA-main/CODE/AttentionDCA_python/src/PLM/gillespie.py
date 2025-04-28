@@ -47,8 +47,8 @@ class SequenceGill:
                 #sum_energy += self.J[aa_j, trial_aa, j, site]
         else:
             sum_energy=self.mat_energy[site][trial_aa] +self.J[trial_aa, self.sequence[self.changed_site],site,self.changed_site]- self.J[trial_aa, self.old_aa,site,self.changed_site]
-        prob = np.exp(self.beta * sum_energy)  # unnormalized
-        return prob
+        #prob = np.exp(self.beta * sum_energy)  # unnormalized
+        return sum_energy
     
     def plm_site_distribution(self, site, quick=False):
         """
@@ -73,15 +73,23 @@ class SequenceGill:
         probs= np.array(probs)
         return probs
     
+    def calc_transition_matrix(self):
+        delta_energy=np.zeros_like(self.mat_energy)
+        for site in range(self.L):
+            delta_energy[site,:]=self.mat_energy[site][self.sequence[site]]*np.ones(self.mat_energy.shape[1])
+        return self.mat_energy-delta_energy
+    
     def draw_aa(self):
         """
         Sample a new AA at the given site from PLM distribution
         """
-        if self.mat_energy is None:
-            probs = self.gillespie_seq()
-            self.mat_energy=1/self.beta*np.log(probs)
+        if self.mat_energy is None: 
+            self.mat_energy=self.gillespie_seq()
         else:
-            probs = self.gillespie_seq(quick=True)
+            self.mat_energy = self.gillespie_seq(quick=True)
+        transitions_matrix=self.calc_transition_matrix()
+        transitions_matrix[ transitions_matrix>=0 ] = 0
+        probs=np.exp(self.beta*transitions_matrix)
         for site in range(self.L):
             probs[site,self.sequence[site]]=0
         k_hat=probs.sum()
