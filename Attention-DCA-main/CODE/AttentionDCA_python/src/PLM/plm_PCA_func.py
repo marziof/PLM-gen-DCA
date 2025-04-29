@@ -14,8 +14,9 @@ sys.path.pop(0)  # Removes the parent_dir from sys.path
 from plm_seq_utils import letters_to_nums, sequences_from_fasta, one_hot_seq_batch
 
 
+
 ############### PCA function #################################
-def plot_pca_of_sequences(sequences, title="PCA of Sequences", max_pot=21, save_path=None):
+def plot_pca_of_sequences(sequences, title="PCA of Sequences",comparison_data=None ,max_pot=21, save_path=None):
     """
     Plots PCA of a list of sequences (strings or numerical) after one-hot encoding.
 
@@ -39,10 +40,21 @@ def plot_pca_of_sequences(sequences, title="PCA of Sequences", max_pot=21, save_
 
     # PCA
     pca_result = PCA(n_components=2).fit_transform(scaled)
+    plt.figure(figsize=(7, 6))
+    plt.scatter(pca_result[:, 0], pca_result[:, 1], alpha=0.5, s=10,label='Sequence Data')
+    if not (comparison_data is None):
+        one_hot_encoded_test_data = one_hot_seq_batch(comparison_data, max_pot=max_pot)
+
+        # Flatten and scale
+        flat_data_test = one_hot_encoded_test_data.reshape(one_hot_encoded_test_data.shape[0], -1)
+        scaled_data_test = StandardScaler().fit_transform(flat_data_test)
+
+        # PCA
+        pca_result_data_test = PCA(n_components=2).fit_transform(scaled_data_test)
+        plt.scatter(pca_result_data_test[:, 0], pca_result_data_test[:, 1], alpha=0.5, s=10,label='Test Data')
 
     # Plot
-    plt.figure(figsize=(7, 6))
-    plt.scatter(pca_result[:, 0], pca_result[:, 1], alpha=0.5, s=10)
+    
     plt.title(title)
     plt.xlabel("PC1")
     plt.ylabel("PC2")
