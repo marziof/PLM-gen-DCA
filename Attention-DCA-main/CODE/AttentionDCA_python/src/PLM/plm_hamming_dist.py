@@ -30,6 +30,10 @@ def hamming_dist_batch(sequences1, sequences2):
     
     return np.array(distances)
 
+def hamming_dist_oneseq_to_batch(seq,batch):
+    hamming_dist_list=[hamming_dist(seq,batch[i]) for i in range(batch.shape[0])]
+    return hamming_dist_list
+
 def vectorized_hamming_distance(sequences1, sequences2):
     # Ensure the number of sequences are the same by truncating the longer array
     min_len = min(sequences1.shape[0], sequences2.shape[0])
