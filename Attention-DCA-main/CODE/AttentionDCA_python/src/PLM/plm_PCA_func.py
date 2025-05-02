@@ -16,7 +16,7 @@ from plm_seq_utils import letters_to_nums, sequences_from_fasta, one_hot_seq_bat
 
 
 ############### PCA function #################################
-def plot_pca_of_sequences(sequences, title="PCA of Sequences",comparison_data=None ,max_pot=21, save_path=None):
+def plot_pca_of_sequences(sequences, title="PCA of Sequences",comparison_data=None ,max_pot=21, save_path=None,pca_graph_restrict=True):
     """
     Plots PCA of a list of sequences (strings or numerical) after one-hot encoding.
 
@@ -59,6 +59,9 @@ def plot_pca_of_sequences(sequences, title="PCA of Sequences",comparison_data=No
     plt.xlabel("PC1")
     plt.ylabel("PC2")
     plt.grid(True)
+    if pca_graph_restrict:
+        plt.xlim(1.5*np.min(pca_result_data_test[:, 0]),1.5*np.max(pca_result_data_test[:, 0]))
+        plt.ylim(1.5*np.min(pca_result_data_test[:, 1]),1.5*np.max(pca_result_data_test[:, 1]))
 
     if save_path:
         plt.savefig(save_path)
