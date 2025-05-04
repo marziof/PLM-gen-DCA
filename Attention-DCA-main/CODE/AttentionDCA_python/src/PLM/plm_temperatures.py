@@ -10,10 +10,10 @@ from plm_hamming_dist import hamming_dist, energy_corr_array
 cwd = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main'
 #cwd='C:\Users\youss\OneDrive\Bureau\master epfl\MA2\TP4 De los Rios\git_test\PLM-gen-DCA\Attention-DCA-main'
 
-betas = [0.1, 0.01, 0.5, 1, 2, 4]
+betas = [0.01, 0.1, 0.5, 1, 2, 4]
 correlations = []
 for b in betas:
-    filename = f'gen_seqs_w_init_seq_Ns40000_r0.1_b{b}'
+    filename = f'gen_seqs_w_init_seq_Ns4000_r0.1_b{b}'
     output_file = cwd + f'/CODE/AttentionDCA_python/src/PLM/generated_sequences/{filename}.npy'
     gen_sequences = np.load(output_file)
 
@@ -23,7 +23,8 @@ for b in betas:
         distance = hamming_dist(initial_sequence, seq)
         hamming_distances.append(distance)
     hamming_distances = np.array(hamming_distances)
-    correlation = np.mean(energy_corr_array(hamming_distances,int(len(hamming_distances)/5)))
+    result = energy_corr_array(hamming_distances, int(len(hamming_distances)/5))
+    correlation = np.mean(result[-1000:])
     correlations.append(correlation)
 correlations = np.array(correlations)
 

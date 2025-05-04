@@ -174,7 +174,7 @@ print(f"Average Hamming distance: {np.mean(hamming_distances)}")
 def energy_corr_step(energy_seq,cor_step):
     avr_en=np.mean(energy_seq)
     first=energy_seq[:-cor_step]-avr_en
-    second=hamming_distances[cor_step:]-avr_en
+    second=energy_seq[cor_step:]-avr_en
     numerator=np.mean(first*second)
     denomin=np.sqrt(np.mean(first**2)*np.mean(second**2))
     return numerator/denomin
@@ -185,7 +185,7 @@ def energy_corr_array(energy_seq,max_cor_step):
         list_corr.append(energy_corr_step(energy_seq,i+1))
     return np.array(list_corr)
 
-corr_energy_plot=energy_corr_array(hamming_distances,int(len(hamming_distances)/5))
+corr_energy_plot=energy_corr_array(hamming_distances,int(len(hamming_distances)))
 # X-axis: correlation step (1 to max_cor_step)
 x_vals = np.arange(1, len(corr_energy_plot) + 1)
 
