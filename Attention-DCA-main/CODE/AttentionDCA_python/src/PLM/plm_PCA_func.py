@@ -41,7 +41,6 @@ def plot_pca_of_sequences(sequences, title="PCA of Sequences",comparison_data=No
     # PCA
     pca_result = PCA(n_components=2).fit_transform(scaled)
     plt.figure(figsize=(7, 6))
-    plt.scatter(pca_result[:, 0], pca_result[:, 1], alpha=0.5, s=10,label='Sequence Data')
     if not (comparison_data is None):
         one_hot_encoded_test_data = one_hot_seq_batch(comparison_data, max_pot=max_pot)
 
@@ -52,6 +51,7 @@ def plot_pca_of_sequences(sequences, title="PCA of Sequences",comparison_data=No
         # PCA
         pca_result_data_test = PCA(n_components=2).fit_transform(scaled_data_test)
         plt.scatter(pca_result_data_test[:, 0], pca_result_data_test[:, 1], alpha=0.5, s=10,label='Test Data')
+    plt.scatter(pca_result[:, 0], pca_result[:, 1], alpha=0.5, s=10,label='Sequence Data')
 
     # Plot
     
@@ -59,7 +59,7 @@ def plot_pca_of_sequences(sequences, title="PCA of Sequences",comparison_data=No
     plt.xlabel("PC1")
     plt.ylabel("PC2")
     plt.grid(True)
-    if pca_graph_restrict:
+    if pca_graph_restrict and not (comparison_data is None):
         plt.xlim(1.5*np.min(pca_result_data_test[:, 0]),1.5*np.max(pca_result_data_test[:, 0]))
         plt.ylim(1.5*np.min(pca_result_data_test[:, 1]),1.5*np.max(pca_result_data_test[:, 1]))
 
