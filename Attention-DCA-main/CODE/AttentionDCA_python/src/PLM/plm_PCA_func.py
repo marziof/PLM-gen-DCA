@@ -31,26 +31,31 @@ def plot_pca_of_sequences(sequences, title="PCA of Sequences",comparison_data=No
     if isinstance(sequences[0], str):
         sequences = [letters_to_nums(seq) for seq in sequences]
 
-    # One-hot encode
-    one_hot_encoded = one_hot_seq_batch(sequences, max_pot=max_pot)
-
-    # Flatten and scale
-    flat = one_hot_encoded.reshape(one_hot_encoded.shape[0], -1)
-    scaled = StandardScaler().fit_transform(flat)
-
-    # PCA
-    pca_result = PCA(n_components=2).fit_transform(scaled)
+        
     plt.figure(figsize=(7, 6))
     if not (comparison_data is None):
         one_hot_encoded_test_data = one_hot_seq_batch(comparison_data, max_pot=max_pot)
 
         # Flatten and scale
         flat_data_test = one_hot_encoded_test_data.reshape(one_hot_encoded_test_data.shape[0], -1)
-        scaled_data_test = StandardScaler().fit_transform(flat_data_test)
+        scaler_data=StandardScaler()
+        scaled_data_test = scaler_data.fit_transform(flat_data_test)
 
         # PCA
-        pca_result_data_test = PCA(n_components=2).fit_transform(scaled_data_test)
+        pca_data=PCA(n_components=2)
+        pca_result_data_test = pca_data.fit_transform(scaled_data_test)
         plt.scatter(pca_result_data_test[:, 0], pca_result_data_test[:, 1], alpha=0.5, s=10,label='Test Data')
+    # One-hot encode
+    one_hot_encoded = one_hot_seq_batch(sequences, max_pot=max_pot)
+
+    # Flatten and scale
+    flat = one_hot_encoded.reshape(one_hot_encoded.shape[0], -1)
+    scaled = scaler_data.transform(flat)
+
+    # PCA
+    pca_result = pca_data.transform(scaled)
+    
+    
     plt.scatter(pca_result[:, 0], pca_result[:, 1], alpha=0.5, s=10,label='Sequence Data')
 
     # Plot
