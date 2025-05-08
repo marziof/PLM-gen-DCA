@@ -57,21 +57,4 @@ def energy_corr_array(energy_seq,max_cor_step):
     for i in range(max_cor_step):
         list_corr.append(energy_corr_step(energy_seq,i+1))
     return np.array(list_corr)
-<<<<<<< HEAD
 
-corr_energy_plot=energy_corr_array(hamming_distances,int(len(hamming_distances)))
-# X-axis: correlation step (1 to max_cor_step)
-x_vals = np.arange(1, len(corr_energy_plot) + 1)
-
-# Plot
-plt.figure(figsize=(8, 6))
-plt.plot(x_vals, corr_energy_plot, marker='o', linestyle='-')
-plt.title("Autocorrelation of Hamming Distance vs Sequence Index")
-plt.xlabel("Correlation Step (sequence offset)")
-plt.ylabel("Correlation")
-plt.grid(True)
-plt.tight_layout()
-plt.savefig(save_path + f'/Hd_correlation_{simu_name}.pdf')
-#plt.show()
-=======
->>>>>>> c6ec641b62615539de6b17663bbb36f709c29483
