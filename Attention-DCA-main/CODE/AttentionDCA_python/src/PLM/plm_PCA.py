@@ -56,11 +56,11 @@ def plot_pca_of_sequences(sequences, title="PCA of Sequences", max_pot=21, save_
     One-hot encode AA sequences - plm generated and true
 """
 filename = 'gen_seqs_w_init_seq_Ns40000_r0.1'
-simu_name=filename
 #filename = 'generated_sequences_randinit_40000'
 #filename = 'generated_sequences_10000'
-#cwd = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main'
-cwd=r'C:\Users\youss\OneDrive\Bureau\master epfl\MA2\TP4 De los Rios\git_test\PLM-gen-DCA\Attention-DCA-main'
+simu_name=filename
+cwd = '/Users/marzioformica/Desktop/EPFL/Master/MA2/Labo/my_project/PLM-gen-DCA/Attention-DCA-main'
+#cwd=r'C:\Users\youss\OneDrive\Bureau\master epfl\MA2\TP4 De los Rios\git_test\PLM-gen-DCA\Attention-DCA-main'
 # Load the generated sequences
 output_file = cwd + f'/CODE/AttentionDCA_python/src/PLM/generated_sequences/{filename}.npy'
 
@@ -137,9 +137,9 @@ save_path = os.path.join(cwd, 'CODE', 'AttentionDCA_python', 'src', 'PLM', 'resu
 if not os.path.exists(save_path):
     os.makedirs(save_path)
 # Save PCA plot side-by-side
-plt.savefig(save_path + f'/TrainGen_{simu_name}_{Ni}_{Nf}.png')
+#plt.savefig(save_path + f'/TrainGen_{simu_name}_{Ni}_{Nf}.png')
 # After saving, display the plot
-plt.show()
+#plt.show()
 
 # PCA plot both in one graph
 plt.figure(figsize=(8, 6))
@@ -152,6 +152,60 @@ plt.ylabel("PC2")
 plt.legend()
 plt.grid(True)
 # Save the combined PCA plot
-plt.savefig(save_path + f'/TrainGen_{simu_name}_{Ni}_{Nf}_onefig.png')
+#plt.savefig(save_path + f'/TrainGen_{simu_name}_{Ni}_{Nf}_onefig.png')
 # Display the combined PCA plot
+#plt.show()
+
+
+###
+# 4. Project Generated Data into PCA space of True Data
+gen_pca_proj = pca_train.transform(gen_scaled)
+
+# 5. PCA plot with generated data projected onto train PCA space
+plt.figure(figsize=(8, 6))
+plt.scatter(train_pca[:, 0], train_pca[:, 1], alpha=0.5, s=10, label='True Sequences')
+plt.scatter(gen_pca_proj[:, 0], gen_pca_proj[:, 1], alpha=0.5, s=10, color='green', label='Generated (Projected)')
+plt.title("PCA: True Sequences & Projected Generated Sequences")
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.legend()
+plt.grid(True)
+
+# Save projected PCA plot
+plt.savefig(save_path + f'/TrainGen_{simu_name}_{Ni}_{Nf}_projected.png')
+plt.show()
+
+
+import seaborn as sns
+from scipy.stats import gaussian_kde
+
+# 6. Side-by-side density plots using colormap
+plt.figure(figsize=(14, 6))
+
+# Density for True Sequences
+plt.subplot(1, 2, 1)
+x = train_pca[:, 0]
+y = train_pca[:, 1]
+kde = gaussian_kde(np.vstack([x, y]))
+z = kde(np.vstack([x, y]))
+plt.scatter(x, y, c=z, s=10, cmap='viridis')
+plt.title("Density: PCA of True Sequences")
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.grid(True)
+
+# Density for Generated Sequences Projected on Train PCA
+plt.subplot(1, 2, 2)
+xg = gen_pca_proj[:, 0]
+yg = gen_pca_proj[:, 1]
+kde_g = gaussian_kde(np.vstack([xg, yg]))
+zg = kde_g(np.vstack([xg, yg]))
+plt.scatter(xg, yg, c=zg, s=10, cmap='plasma')
+plt.title("Density: Projected Generated Sequences")
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.grid(True)
+
+plt.tight_layout()
+plt.savefig(save_path + f'/TrainGen_{simu_name}_{Ni}_{Nf}_projected_density.png')
 plt.show()

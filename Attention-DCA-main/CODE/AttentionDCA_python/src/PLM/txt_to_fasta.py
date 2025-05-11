@@ -1,8 +1,10 @@
 
 # Read your sequences from a txt file and output a fasta file
 
-filename = 'generated_sequences_randinit_40000'
-txt_file = f'generated_sequences/{filename}.txt'
+seq_dir = 'mc_generated_sequences'
+#filename = 'generated_sequences_randinit_40000'
+filename = 'mc_gen_seqs_w_init_seq_Ns300000_r0.1'
+txt_file = f'{seq_dir}/{filename}.txt'
 
 # Read all sequences first
 with open(txt_file, 'r') as infile:
@@ -21,6 +23,6 @@ indices = np.linspace(0, len(selected_sequences) - 1, 100, dtype=int)
 evenly_spaced_sequences = [selected_sequences[i] for i in indices]
 
 # Now write to fasta
-with open(f'generated_sequences/{filename}.fasta', 'w') as outfile:
+with open(f'{seq_dir}/{filename}.fasta', 'w') as outfile:
     for idx, seq in enumerate(evenly_spaced_sequences):
         outfile.write(f">seq{5000 + indices[idx] + 1}\n{seq}\n")  # adjust seq id based on original file
