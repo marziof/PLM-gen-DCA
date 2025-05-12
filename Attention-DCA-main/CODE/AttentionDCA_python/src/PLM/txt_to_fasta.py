@@ -1,9 +1,13 @@
 
 # Read your sequences from a txt file and output a fasta file
 
-seq_dir = 'mc_generated_sequences'
+
+seq_dir = 'generated_sequences'
 #filename = 'generated_sequences_randinit_40000'
-filename = 'mc_gen_seqs_w_init_seq_Ns300000_r0.1'
+filename = 'gen_seqs_w_init_seq_Ns40000_r0.1'
+#seq_dir = 'mc_generated_sequences'
+#filename = 'mc_gen_seqs_w_init_seq_Ns300000_r0.1'
+#filename = 'mc_generated_sequences_randinit_300000'
 txt_file = f'{seq_dir}/{filename}.txt'
 
 # Read all sequences first
