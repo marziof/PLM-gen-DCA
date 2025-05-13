@@ -70,8 +70,6 @@ def plot_pca_of_sequences(sequences, title="PCA of Sequences",comparison_data=No
 
     if save_path:
         plt.savefig(save_path)
-<<<<<<< HEAD
-=======
     plt.show()
 
 def plot_projected_pca(sequences_reference, sequences_to_project, 
@@ -223,5 +221,4 @@ def plot_projected_pca_colormap(sequences_reference, sequences_to_project,
 
     if save_path:
         plt.savefig(save_path)
->>>>>>> 753d3cd4c21be9074c0145f018e838ee4c2ae51c
     plt.show()
