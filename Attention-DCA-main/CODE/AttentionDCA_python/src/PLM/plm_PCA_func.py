@@ -229,10 +229,36 @@ def compute_2d_histogram(data, bins=50, range_=None):
     hist /= np.sum(hist)  # normalize to get probability distribution
     return hist
 
+def compute_and_plot_2d_histogram(data, bins=50, range_=None, cmap='viridis'):
+    # Compute histogram
+    hist, xedges, yedges = np.histogram2d(data[:, 0], data[:, 1], bins=bins, range=range_)
+    hist = hist + 1e-10  # avoid zero for stability
+    hist /= np.sum(hist)  # normalize to get probability distribution
+
+    # Plot heatmap
+    plt.figure(figsize=(8,6))
+    # Extent for imshow: left, right, bottom, top
+    extent = [xedges[0], xedges[-1], yedges[0], yedges[-1]]
+    plt.imshow(hist.T, origin='lower', extent=extent, aspect='auto', cmap=cmap)
+    plt.colorbar(label='Probability density')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.title('2D Histogram (Normalized)')
+    plt.show()
+
+    return hist
+
 from scipy.stats import entropy
 
-def compute_kl_divergence(p, q):
+def compute_kl_divergence_prev(p, q):
     return entropy(p.flatten(), q.flatten())
+
+def compute_kl_divergence(P, Q, epsilon=1e-22):
+    P = P + epsilon
+    Q = Q + epsilon
+    P = P / np.sum(P)
+    Q = Q / np.sum(Q)
+    return np.sum(P * np.log(P / Q))
 
 def kl_divergence_between_pca_distributions(pca_data_1, pca_data_2, bins=50):
     # Define a shared range for both histograms
@@ -244,7 +270,8 @@ def kl_divergence_between_pca_distributions(pca_data_1, pca_data_2, bins=50):
     # Compute histograms (probability distributions)
     p = compute_2d_histogram(pca_data_1, bins=bins, range_=range_)
     q = compute_2d_histogram(pca_data_2, bins=bins, range_=range_)
-
+    diff = p-q
+    print("Max diff: ", np.max(diff))
     # KL divergence
     kl_pq = compute_kl_divergence(p, q)
     kl_qp = compute_kl_divergence(q, p)
@@ -268,7 +295,7 @@ def return_pca_results(sequences,comparison_data,max_pot=21):
     # PCA
     pca_data=PCA(n_components=2)
     pca_result_data_test = pca_data.fit_transform(scaled_data_test)
-    plt.scatter(pca_result_data_test[:, 0], pca_result_data_test[:, 1], alpha=0.5, s=10,label='Test Data')
+    #plt.scatter(pca_result_data_test[:, 0], pca_result_data_test[:, 1], alpha=0.5, s=10,label='Test Data')
 # One-hot encode
     one_hot_encoded = one_hot_seq_batch(sequences, max_pot=max_pot)
 
