@@ -34,6 +34,10 @@ def hamming_dist_oneseq_to_batch(seq,batch):
     hamming_dist_list=[hamming_dist(seq,batch[i]) for i in range(batch.shape[0])]
     return hamming_dist_list
 
+def hamming_dist_oneseq_to_batch_new(seq,batch):
+    hamming_dist_list=[hamming_dist(seq,ref_seq) for ref_seq in batch]
+    return hamming_dist_list
+
 def vectorized_hamming_distance(sequences1, sequences2):
     # Ensure the number of sequences are the same by truncating the longer array
     min_len = min(sequences1.shape[0], sequences2.shape[0])
@@ -58,7 +62,6 @@ def energy_corr_array(energy_seq,max_cor_step):
         list_corr.append(energy_corr_step(energy_seq,i+1))
     return np.array(list_corr)
 
-
 #corr_energy_plot=energy_corr_array(hamming_distances,int(len(hamming_distances)))
 ## X-axis: correlation step (1 to max_cor_step)
 #x_vals = np.arange(1, len(corr_energy_plot) + 1)
@@ -73,5 +76,3 @@ def energy_corr_array(energy_seq,max_cor_step):
 #plt.tight_layout()
 #plt.savefig(save_path + f'/Hd_correlation_{simu_name}.pdf')
 ##plt.show()
-#
-#c6ec641b62615539de6b17663bbb36f709c29483
