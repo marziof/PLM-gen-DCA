@@ -101,9 +101,9 @@ print(N)
     Generate sequences with mc random initialization
 """
 save_dir = "mc_generated_sequences"
-N_seqs = 300000
+N_seqs = 100000
 save_name = f"mc_generated_sequences_randinit_{N_seqs}"
-#generate_mc_n_save(save_dir, save_name, Jtens, N_seqs, init_sequence=None)
+generate_mc_n_save(save_dir, save_name, Jtens, N_seqs, init_sequence=None)
 ##############################################################
 """
     Generate sequences with mc initialization from a sequence
