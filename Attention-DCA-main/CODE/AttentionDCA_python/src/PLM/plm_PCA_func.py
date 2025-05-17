@@ -306,3 +306,16 @@ def return_pca_results(sequences,comparison_data,max_pot=21):
     # PCA
     pca_result = pca_data.transform(scaled)
     return pca_result,pca_result_data_test
+
+from scipy.spatial import cKDTree
+import numpy as np
+
+def average_minimum_distance(pca_true, pca_gen):
+    tree_gen = cKDTree(pca_gen)
+    dists_true_to_gen, _ = tree_gen.query(pca_true, k=1)
+    return np.mean(dists_true_to_gen)
+
+def symmetric_average_minimum_distance(pca_true, pca_gen):
+    amd_true_to_gen = average_minimum_distance(pca_true, pca_gen)
+    amd_gen_to_true = average_minimum_distance(pca_gen, pca_true)
+    return 0.5 * (amd_true_to_gen + amd_gen_to_true)
