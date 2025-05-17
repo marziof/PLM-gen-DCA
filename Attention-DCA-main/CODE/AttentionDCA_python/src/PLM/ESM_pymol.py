@@ -117,39 +117,48 @@ def calculate_rmsd_pymol(pdb1, pdb2):
     for line in result.stdout.splitlines():
         if "CUSTOM_RMSD:" in line:
             try:
-                rmsd_value = float(line.split("CUSTOM_RMSD:")[1].strip())
+                # Extract only the part after 'CUSTOM_RMSD:' and strip it
+                value_part = line.split("CUSTOM_RMSD:")[1].strip()
+                # Optional: remove any trailing characters or garbage
+                value_part = value_part.split()[0]  # Takes only the first token
+                rmsd_value = float(value_part)
                 return rmsd_value
             except (IndexError, ValueError) as e:
-                print(f"⚠️ Failed to parse RMSD: {e}")
+                print(f"⚠️ Failed to parse RMSD line: {line} — {e}")
 
     raise RuntimeError("Failed to extract RMSD from PyMOL output.")
 
-def compare_sequence_sets(true_sequences, generated_sequences):
+def compare_sequence_sets(true_sequences, generated_sequences,lab1="",lab2=""):
     """Compare two arrays: true vs generated. Returns pairwise RMSDs."""
     true_pdbs = []
     gen_pdbs = []
-
+    print(len(true_sequences))
+    rmsd_matrix=np.zeros(len(true_sequences),len(generated_sequences))
     # Predict and save structures for true sequences
     for i, seq in enumerate(true_sequences):
-        filename = f"true_{i+1}.pdb"
-        #fetch_structure(seq, filename)
+        filename = lab1+f"_{i+1}.pdb"
+        if not os.path.exists(filename):
+            print(f"✅ File {filename} created —  fetched.")
+            fetch_structure(seq, filename)
+            time.sleep(1)
         true_pdbs.append(filename)
-        #time.sleep(1)
+        
 
     # Predict and save structures for generated sequences
     for j, seq in enumerate(generated_sequences):
-        filename = f"gen_{j+1}.pdb"
-        #fetch_structure(seq, filename)
+        filename = lab2+f"_{j+1}.pdb"
+        if not os.path.exists(filename):
+            print(f"✅ File {filename} created —  fetched.")
+            fetch_structure(seq, filename)
+            time.sleep(1)
         gen_pdbs.append(filename)
-        #time.sleep(1)
-
     # Pairwise RMSD comparison
-    rmsd_matrix = {}
+    
     for i, pdb_true in enumerate(true_pdbs):
         for j, pdb_gen in enumerate(gen_pdbs):
             rmsd = calculate_rmsd_pymol(pdb_true, pdb_gen)
-            rmsd_matrix[(i, j)] = rmsd
-            print(f"True {i+1} vs Generated {j+1}: RMSD = {rmsd:.3f} Å")
+            rmsd_matrix[i][j] = rmsd
+            #print(f"True {i+1} vs Generated {j+1}: RMSD = {rmsd:.3f} Å")
 
     return rmsd_matrix
 

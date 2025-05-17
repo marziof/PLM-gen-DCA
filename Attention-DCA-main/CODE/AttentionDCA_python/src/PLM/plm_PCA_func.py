@@ -222,3 +222,60 @@ def plot_projected_pca_colormap(sequences_reference, sequences_to_project,
     if save_path:
         plt.savefig(save_path)
     plt.show()
+
+def compute_2d_histogram(data, bins=50, range_=None):
+    hist, xedges, yedges = np.histogram2d(data[:, 0], data[:, 1], bins=bins, range=range_)
+    hist = hist + 1e-10  # add small constant to avoid division by zero
+    hist /= np.sum(hist)  # normalize to get probability distribution
+    return hist
+
+from scipy.stats import entropy
+
+def compute_kl_divergence(p, q):
+    return entropy(p.flatten(), q.flatten())
+
+def kl_divergence_between_pca_distributions(pca_data_1, pca_data_2, bins=50):
+    # Define a shared range for both histograms
+    combined = np.vstack((pca_data_1, pca_data_2))
+    x_min, y_min = np.min(combined, axis=0)
+    x_max, y_max = np.max(combined, axis=0)
+    range_ = [[x_min, x_max], [y_min, y_max]]
+
+    # Compute histograms (probability distributions)
+    p = compute_2d_histogram(pca_data_1, bins=bins, range_=range_)
+    q = compute_2d_histogram(pca_data_2, bins=bins, range_=range_)
+
+    # KL divergence
+    kl_pq = compute_kl_divergence(p, q)
+    kl_qp = compute_kl_divergence(q, p)
+
+    return kl_pq, kl_qp
+
+def return_pca_results(sequences,comparison_data,max_pot=21):
+    if isinstance(sequences[0], str):
+        sequences = [letters_to_nums(seq) for seq in sequences]
+
+        
+    
+    
+    one_hot_encoded_test_data = one_hot_seq_batch(comparison_data, max_pot=max_pot)
+
+    # Flatten and scale
+    flat_data_test = one_hot_encoded_test_data.reshape(one_hot_encoded_test_data.shape[0], -1)
+    scaler_data=StandardScaler()
+    scaled_data_test = scaler_data.fit_transform(flat_data_test)
+
+    # PCA
+    pca_data=PCA(n_components=2)
+    pca_result_data_test = pca_data.fit_transform(scaled_data_test)
+    plt.scatter(pca_result_data_test[:, 0], pca_result_data_test[:, 1], alpha=0.5, s=10,label='Test Data')
+# One-hot encode
+    one_hot_encoded = one_hot_seq_batch(sequences, max_pot=max_pot)
+
+    # Flatten and scale
+    flat = one_hot_encoded.reshape(one_hot_encoded.shape[0], -1)
+    scaled = scaler_data.transform(flat)
+
+    # PCA
+    pca_result = pca_data.transform(scaled)
+    return pca_result,pca_result_data_test
