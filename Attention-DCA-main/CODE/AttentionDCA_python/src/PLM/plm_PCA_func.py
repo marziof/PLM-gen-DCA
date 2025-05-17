@@ -244,7 +244,7 @@ def kl_divergence_between_pca_distributions(pca_data_1, pca_data_2, bins=50):
     # Compute histograms (probability distributions)
     p = compute_2d_histogram(pca_data_1, bins=bins, range_=range_)
     q = compute_2d_histogram(pca_data_2, bins=bins, range_=range_)
-
+    
     # KL divergence
     kl_pq = compute_kl_divergence(p, q)
     kl_qp = compute_kl_divergence(q, p)
@@ -268,7 +268,6 @@ def return_pca_results(sequences,comparison_data,max_pot=21):
     # PCA
     pca_data=PCA(n_components=2)
     pca_result_data_test = pca_data.fit_transform(scaled_data_test)
-    plt.scatter(pca_result_data_test[:, 0], pca_result_data_test[:, 1], alpha=0.5, s=10,label='Test Data')
 # One-hot encode
     one_hot_encoded = one_hot_seq_batch(sequences, max_pot=max_pot)
 
@@ -279,3 +278,16 @@ def return_pca_results(sequences,comparison_data,max_pot=21):
     # PCA
     pca_result = pca_data.transform(scaled)
     return pca_result,pca_result_data_test
+
+from scipy.spatial import cKDTree
+import numpy as np
+
+def average_minimum_distance(pca_true, pca_gen):
+    tree_gen = cKDTree(pca_gen)
+    dists_true_to_gen, _ = tree_gen.query(pca_true, k=1)
+    return np.mean(dists_true_to_gen)
+
+def symmetric_average_minimum_distance(pca_true, pca_gen):
+    amd_true_to_gen = average_minimum_distance(pca_true, pca_gen)
+    amd_gen_to_true = average_minimum_distance(pca_gen, pca_true)
+    return 0.5 * (amd_true_to_gen + amd_gen_to_true)
