@@ -1,7 +1,9 @@
 import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
+import matplotlib
 import matplotlib.pyplot as plt
+
 
 import os
 import sys
@@ -14,6 +16,11 @@ sys.path.pop(0)  # Removes the parent_dir from sys.path
 from plm_seq_utils import letters_to_nums, sequences_from_fasta, one_hot_seq_batch
 
 
+matplotlib.rc('xtick', labelsize=15) 
+matplotlib.rc('ytick', labelsize=15)
+font = {'size'   : 18}
+
+matplotlib.rc('font', **font)
 
 ############### PCA function #################################
 def plot_pca_of_sequences(sequences, title="PCA of Sequences",comparison_data=None ,max_pot=21, save_path=None,pca_graph_restrict=True):
@@ -114,9 +121,9 @@ def plot_projected_pca(sequences_reference, sequences_to_project,
     # Plot
     plt.figure(figsize=(8, 6))
     plt.scatter(ref_pca[:, 0], ref_pca[:, 1], alpha=0.5, s=10, label='Reference Sequences')
-    plt.scatter(proj_pca[:, 0], proj_pca[:, 1], alpha=0.5, s=10, color='green', label='Projected Sequences')
+    plt.scatter(proj_pca[:, 0], proj_pca[:, 1], alpha=0.5, s=10, color='orange', label='Projected Sequences')
 
-    plt.title(title)
+    #plt.title(title)
     plt.xlabel("PC1")
     plt.ylabel("PC2")
     plt.legend()
