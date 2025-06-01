@@ -38,6 +38,9 @@ def hamming_dist_oneseq_to_batch_new(seq,batch):
     hamming_dist_list=[hamming_dist(seq,ref_seq) for ref_seq in batch]
     return hamming_dist_list
 
+def hamming_dist_batch_tobatch(batch1,batch2,ratio=0.1):
+    hamming_dist=[hamming_dist_oneseq_to_batch_new(seq,batch2[::int(len(batch2)*ratio)]) for seq in batch1[::int(len(batch1)*ratio)]]
+
 def vectorized_hamming_distance(sequences1, sequences2):
     # Ensure the number of sequences are the same by truncating the longer array
     min_len = min(sequences1.shape[0], sequences2.shape[0])

@@ -34,16 +34,21 @@ def compute_position_frequencies(sequence_array, n_amino_acids=None):
 
     return freq_matrix
 
-def plot_frequencies_aa_pos(gen_seq,ref_seq,save_path=None,filename=None):
+def plot_frequencies_aa_pos(gen_seq,ref_seq,save_path=None,filename=None,beta=None):
     freq_mat_gen=compute_position_frequencies(gen_seq)
     freq_mat_data_train=compute_position_frequencies(ref_seq)
     freq_mat_gen=np.reshape(freq_mat_gen,-1)
     freq_mat_data_train=np.reshape(freq_mat_data_train,-1)
-    plt.scatter(freq_mat_data_train,freq_mat_gen)
+    plt.scatter(freq_mat_data_train,freq_mat_gen,label=fr'$\beta={beta}$')
     plt.plot([0,1],[0,1], color='gray', linestyle='--')
-    plt.xlabel("True Amino Acid Frequency")
+    plt.xlabel("Reference Amino Acid Frequency")
     plt.ylabel("Generated Amino Acid Frequency")
     plt.grid(True)
+    plt.legend()
+    # if beta:
+    #     plt.plot([0], [0], ' ', label=fr'$\beta={beta}$')  # Dummy plot for legend
+    #     plt.legend()
+
     if save_path:
         save_name = save_path + f'/freqs_{filename}.png'
         plt.savefig(save_name)
