@@ -133,7 +133,9 @@ def compare_sequence_sets(true_sequences, generated_sequences,lab1="",lab2=""):
     true_pdbs = []
     gen_pdbs = []
     print(len(true_sequences))
-    rmsd_matrix=np.zeros(len(true_sequences),len(generated_sequences))
+    print(len(generated_sequences))
+    rmsd_matrix=np.zeros((len(true_sequences),len(generated_sequences)))
+    print(rmsd_matrix.shape)
     # Predict and save structures for true sequences
     for i, seq in enumerate(true_sequences):
         filename = lab1+f"_{i+1}.pdb"
