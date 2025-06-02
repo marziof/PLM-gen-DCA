@@ -13,21 +13,21 @@
     - SequenceMC: Same initialization as previous classes. To draw an amino acid according to MCMC use the method draw_aa_metropolis().
     - montecarlo_main.py: implements a function generate_mc_n_save() to do multiple iterations and save them in a directory.
 - temperatures.ipynb: Runs MC and PLM sampling for different conditions (initial sequence, sampling temperature...). An initial study of the generated sequences is also done in this notebook. 
-- seq_utils.py: letter_to_num and num_to_letter dictionnaries, read_tensor_from_txt(), sequences_from_fasta(), modify_seq(), one_hot_seq_batch(), letters_to_nums() & nums_to_letters()/numbers_to_letters() - similar but requires additional input, seq_num_to_letters() 
   
 
 
 ## Files for analysis of generated sequences
+- seq_utils.py: letter_to_num and num_to_letter dictionnaries, read_tensor_from_txt(), sequences_from_fasta(), modify_seq(), one_hot_seq_batch(), letters_to_nums() & nums_to_letters()/numbers_to_letters() - similar but requires additional input, seq_num_to_letters()
 - PCA_func.py: provides the functions to do a PCA analysis plots.
 - hamming_dist.py: Provides methods to calculate the hamming distance between sequences. Used for decorrelation graphs.
 - check_proba_distrib.py (in extra): sanity check to verify sampling of amino acids works as planned: plot proba distribution and empirical frequencies of draws, special check at HPD sites, saves in PLM/results/ProbaDsitrib
 - decorrelation_and_frequency_plots.ipynb: Used for the study of the decorrelation plots for the different sampling methods and for the aa frquency graphs as well.
 - ESM_pymol_run.ipynb: Compares the RMSD (3D structure) between the different sequence groups (generated vs true sequences)
-- Blast_nb.ipynb and Read_Blast.py: analyze blast results
+- Blast_nb.ipynb and Read_Blast.py in results/Blast: analyze blast results (txt_to_fasta.py to generate fasta file to run on blast)
 - phase_transition.ipynb: Studies the evolution of different quantities (hamming distance, KL divergence over PCA distribution and PCA closest point distance) over the change of the temperature.
 
   ## Storing results
   - generated_sequences: contains plm generated sequences
   - gill_generated_sequences:contains gillespie generated sequences
-  - mc_genereated sequences:contains MCMC generated sequences
+  - mc_genereated_sequences:contains MCMC generated sequences
   - results: contains results from analysis
