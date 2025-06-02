@@ -13,7 +13,7 @@ sys.path.insert(0, parent_dir)
 from dcascore import *
 # back to original path (in PLM)
 sys.path.pop(0)  # Removes the parent_dir from sys.path
-from plm_seq_utils import letters_to_nums, sequences_from_fasta, one_hot_seq_batch
+from seq_utils import letters_to_nums, sequences_from_fasta, one_hot_seq_batch
 
 
 matplotlib.rc('xtick', labelsize=15) 

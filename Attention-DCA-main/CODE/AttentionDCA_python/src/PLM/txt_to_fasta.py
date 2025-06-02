@@ -1,4 +1,4 @@
-from plm_seq_utils import nums_to_letters
+from seq_utils import nums_to_letters
 import numpy as np
 # Read your sequences from a txt file and output a fasta file
 

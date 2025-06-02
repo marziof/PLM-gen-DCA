@@ -10,7 +10,7 @@ from dcascore import *
 # back to original path (in PLM)
 sys.path.pop(0)  # Removes the parent_dir from sys.path
 from monte_carlo import SequenceMC
-from plm_seq_utils import nums_to_letters, modify_seq, letters_to_nums, set_seed, read_tensor_from_txt
+from seq_utils import nums_to_letters, modify_seq, letters_to_nums, set_seed, read_tensor_from_txt
 
 #-----------------------------------Functions--------------------------------------------
 

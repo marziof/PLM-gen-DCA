@@ -1,5 +1,5 @@
 from plm_model import SequencePLM
-from plm_seq_utils import nums_to_letters
+from seq_utils import nums_to_letters
 
 import os
 import numpy as np
@@ -32,18 +32,6 @@ def generate_plm_alter(J, N_seqs = 10000, N_iters=1000 , init_sequence=None,beta
         gen_sequences.append(seq.sequence.copy())
     gen_sequences = np.array(gen_sequences)
     return gen_sequences
-
-#def generate_plm_n_save(save_dir,J,N_seqs=10000, init_sequence=None):
-#    gen_sequences = generate_plm(J,N_seqs, init_sequence)
-#    gen_sequences_letters = [nums_to_letters(sequence) for sequence in gen_sequences]
-#    print(gen_sequences_letters)
-#    gen_sequences = np.array(gen_sequences)
-#    save_name = f"generated_sequences_{N_seqs}"
-#    if not os.path.exists(save_dir):
-#        os.makedirs(save_dir)
-#    np.save(f"{save_dir}/{save_name}.npy", gen_sequences)
-#    np.save(f"{save_dir}/{save_name}.txt", gen_sequences_letters)
-#    print(f"Generated sequences saved to {save_dir}")
 
 def generate_plm_n_save(save_dir, save_name, J, N_seqs=10000, init_sequence=None,beta=1):
     """

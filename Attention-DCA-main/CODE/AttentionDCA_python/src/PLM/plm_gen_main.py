@@ -6,17 +6,16 @@ current_dir = os.path.dirname(__file__)
 parent_dir = os.path.abspath(os.path.join(current_dir, '..'))
 sys.path.insert(0, parent_dir)
 from model import AttentionModel
-from attention import trainer
 from dcascore import *
 # back to original path (in PLM)
 sys.path.pop(0)  # Removes the parent_dir from sys.path
 from model import AttentionModel
-<<<<<<< HEAD
-from plm_gen_methods import generate_plm_n_save, generate_plm_alter_n_save
-=======
-from plm_gen_methods import generate_plm_n_save #generate_plm_alter_n_save
->>>>>>> 753d3cd4c21be9074c0145f018e838ee4c2ae51c
-from plm_seq_utils import read_tensor_from_txt, set_seed, letters_to_nums, modify_seq
+
+from plm_gen_methods import generate_plm_n_save
+from seq_utils import read_tensor_from_txt, set_seed, letters_to_nums, modify_seq
+
+
+#---------------------- Choose the method to generate sequences, comment rest ----------------------
 
 
 ##############################################################
@@ -79,11 +78,8 @@ ratio = 0.1
 init_sequence_num = modify_seq(init_sequence_num, ratio)
 N_seqs=40000
 save_name = f"gen_seqs_w_init_seq_Ns{N_seqs}_r{ratio}"
-<<<<<<< HEAD
-#generate_plm_n_save(save_dir, save_name, Jtens, N_seqs, init_sequence=init_sequence_num)
-=======
+
 generate_plm_n_save(save_dir, save_name, Jtens, N_seqs, init_sequence=init_sequence_num)
->>>>>>> 753d3cd4c21be9074c0145f018e838ee4c2ae51c
 
 ##############################################################
 """
@@ -108,9 +104,6 @@ N_seqs=4000
 betas = [0.01, 0.1, 0.5, 1, 2, 4, 10]
 for b in betas:
     save_name = f"gen_seqs_w_init_seq_Ns{N_seqs}_r{ratio}_b{b}"
-<<<<<<< HEAD
+
     generate_plm_n_save(save_dir, save_name, Jtens, N_seqs, init_sequence=init_sequence_num, beta=b)
-=======
     #generate_plm_n_save(save_dir, save_name, Jtens, N_seqs, init_sequence=init_sequence_num, beta=b)
->>>>>>> 753d3cd4c21be9074c0145f018e838ee4c2ae51c
-    print("beta ", b, "saved")

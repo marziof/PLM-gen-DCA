@@ -1,7 +1,7 @@
 from tqdm import tqdm
 import numpy as np
 
-from plm_seq_utils import letter_to_num
+from seq_utils import letter_to_num
 
 class SequenceMC:
     # Logic: at each step, change AA with probability p, or keep it with probability 1-p

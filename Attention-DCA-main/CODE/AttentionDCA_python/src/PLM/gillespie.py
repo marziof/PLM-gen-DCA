@@ -1,7 +1,7 @@
 from tqdm import tqdm
 import numpy as np
 
-from plm_seq_utils import letter_to_num
+from seq_utils import letter_to_num
 
 class SequenceGill:
     # Logic: proba to assing a specific AA to a specific site = proba to choose site (uniform distrib) * proba to draw AA at site
@@ -17,7 +17,7 @@ class SequenceGill:
         self.changed_site=None
         self.time=0
         if initial_sequence is None:
-            self.sequence = np.random.choice(np.arange(21), self.L) # Sequence of ints (1 to 21)
+            self.sequence = np.random.choice(np.arange(21), self.L)
         else:
             self.sequence = initial_sequence
 
@@ -31,7 +31,7 @@ class SequenceGill:
         print(letter_seq)
         return letter_seq
 
-    def plm_calc(self, site, trial_aa,quick=False):
+    def energy_calc(self, site, trial_aa,quick=False):
         """
         Compute unnormalized pseudo-likelihood of trial_aa at a given site.
         site: int from 0 to L-1
@@ -43,14 +43,12 @@ class SequenceGill:
                 if j == site:
                     continue
                 aa_j = self.sequence[j]
-                sum_energy += self.J[trial_aa, aa_j, site, j] # check indexing
-                #sum_energy += self.J[aa_j, trial_aa, j, site]
+                sum_energy += self.J[trial_aa, aa_j, site, j]
         else:
             sum_energy=self.mat_energy[site][trial_aa] +self.J[trial_aa, self.sequence[self.changed_site],site,self.changed_site]- self.J[trial_aa, self.old_aa,site,self.changed_site]
-        #prob = np.exp(self.beta * sum_energy)  # unnormalized
         return sum_energy
     
-    def plm_site_distribution(self, site, quick=False):
+    def site_distribution(self, site, quick=False):
         """
         Compute probability distriution for specific site 
         """
@@ -59,7 +57,7 @@ class SequenceGill:
             # if trial_aa==self.sequence[site]:
             #     probs.append(0)
             # else:
-            probs.append(self.plm_calc(site, trial_aa, quick=quick))
+            probs.append(self.energy_calc(site, trial_aa, quick=quick))
         probs = np.array(probs)
         return probs
     
@@ -69,7 +67,7 @@ class SequenceGill:
         """
         probs=[]
         for site in range(self.L):
-            probs.append(self.plm_site_distribution(site,quick=quick))
+            probs.append(self.site_distribution(site,quick=quick))
         probs= np.array(probs)
         return probs
     

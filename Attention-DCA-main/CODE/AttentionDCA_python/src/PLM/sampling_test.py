@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from plm_PCA_func import plot_pca_of_sequences
-from plm_hamming_dist import *
+from PCA_func import plot_pca_of_sequences
+from hamming_dist import *
 
 
 def compute_position_frequencies(sequence_array, n_amino_acids=None):

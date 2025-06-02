@@ -1,5 +1,5 @@
 
-from plm_seq_utils import letters_to_nums, sequences_from_fasta
+from seq_utils import letters_to_nums, sequences_from_fasta
 #from plm_PCA import one_hot_seq_batch
 import numpy as np
 import matplotlib.pyplot as plt
